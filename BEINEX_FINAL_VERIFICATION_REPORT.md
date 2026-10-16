@@ -2,6 +2,8 @@
 
 **Assessment Target:** Beinex Consulting Technical Assessment  
 **Project Workspace:** `D:\adeeb`  
+**GitHub Repository:** [https://github.com/muhammedadeebarif-arch/Beinex](https://github.com/muhammedadeebarif-arch/Beinex)  
+**Live Public Demo URL:** [https://perfectly-porcelain-vienna-bryant.trycloudflare.com](https://perfectly-porcelain-vienna-bryant.trycloudflare.com)  
 **Audit Timestamp:** October 16, 2026  
 **Final Status Recommendation:** **READY TO SUBMIT (100% COMPLIANT)**
 

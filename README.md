@@ -1,5 +1,8 @@
 # Employee Management System — Beinex Technical Assessment
 
+> 🌐 **Live Interactive Demo:** [https://perfectly-porcelain-vienna-bryant.trycloudflare.com](https://perfectly-porcelain-vienna-bryant.trycloudflare.com)  
+> *(Live full-stack deployment: Full-Screen 3D Beinex Interface + Angular SPA + Go Backend + PostgreSQL Database with Real-Time CRUD)*
+
 A production-grade, enterprise Employee Management System built from scratch for the Beinex Consulting technical recruitment assessment.
 
 ## Mandatory Technology Stack
