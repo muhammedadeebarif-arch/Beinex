@@ -1,0 +1,189 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Full Size Screen Viewport — Zero White Background */
+.scene-3d-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: #020614;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scene-3d-viewport.scene-transitioning {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+/* Fullscreen HD Background Layer */
+.hd-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fullscreen-beinex-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.65) contrast(1.15) blur(18px);
+  transform: scale(1.15);
+}
+
+.cinematic-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(2, 6, 20, 0.35) 0%, rgba(2, 6, 20, 0.8) 100%);
+}
+
+.ambient-blue-ray {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.45) 0%, rgba(0, 163, 255, 0.15) 50%, transparent 75%);
+  filter: blur(80px);
+}
+
+/* 3D Perspective Stage */
+.perspective-stage {
+  perspective: 1200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  z-index: 10;
+}
+
+/* 3D Monolith */
+.monolith-3d {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  transition: transform 0.12s cubic-bezier(0.2, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Centerpiece Beinex HD Image */
+.beinex-centerpiece {
+  position: relative;
+  transform: translateZ(50px);
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emblem-glow {
+  position: absolute;
+  inset: -25px;
+  border-radius: 28px;
+  background: radial-gradient(circle, rgba(0, 163, 255, 0.4) 0%, rgba(37, 99, 235, 0.2) 50%, transparent 75%);
+  filter: blur(35px);
+  pointer-events: none;
+}
+
+.beinex-hd-artwork {
+  width: min(540px, 88vw);
+  height: auto;
+  max-height: 62vh;
+  border-radius: 22px;
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, 0.85),
+    0 0 50px rgba(0, 163, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: block;
+  image-rendering: high-quality;
+}
+
+/* Action Portal Button */
+.action-portal-layer {
+  transform: translateZ(75px);
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-enter-system {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 38px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  cursor: pointer;
+  box-shadow:
+    0 12px 32px -6px rgba(2, 132, 199, 0.55),
+    0 0 24px rgba(56, 189, 248, 0.35);
+  transition: all 0.22s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.btn-enter-system:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+  box-shadow:
+    0 16px 42px -4px rgba(2, 132, 199, 0.75),
+    0 0 35px rgba(56, 189, 248, 0.55);
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(56, 189, 248, 0.85);
+}
+
+.btn-enter-system:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.btn-arrow {
+  transition: transform 0.2s ease;
+}
+
+.btn-enter-system:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .monolith-3d {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .beinex-hd-artwork {
+    width: 280px;
+  }
+  .btn-enter-system {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+}

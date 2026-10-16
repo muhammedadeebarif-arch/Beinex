@@ -1,0 +1,52 @@
+<nav *ngIf="isAppView()" class="navbar" id="app-navbar">
+  <div class="nav-content">
+    <div class="brand" (click)="navigateTo3D()" style="cursor: pointer" title="Return to 3D Interface">
+      <div class="brand-icon">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-company">Beinex Consulting</span>
+        <span class="brand-divider">/</span>
+        <span class="brand-app">Employee Management</span>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <div class="nav-status">
+        <span class="status-indicator"></span>
+        <span class="status-label">PostgreSQL Active</span>
+      </div>
+
+      <button
+        type="button"
+        class="btn-3d-portal"
+        (click)="navigateTo3D()"
+        id="btn-nav-3d"
+        title="Return to Full-Screen 3D Interface"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        <span>3D Experience</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main [class.main-content]="isAppView()">
+  <router-outlet></router-outlet>
+</main>

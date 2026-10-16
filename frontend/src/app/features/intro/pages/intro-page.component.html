@@ -1,0 +1,62 @@
+<div
+  class="scene-3d-viewport"
+  [class.scene-transitioning]="isTransitioning()"
+  role="main"
+  aria-label="Beinex Full-Screen 3D Interface"
+>
+  <!-- Full Screen HD Beinex Background Canvas -->
+  <div class="hd-bg-wrapper" aria-hidden="true">
+    <img
+      src="beinex-logo.jpg"
+      alt="Beinex HD Background"
+      class="fullscreen-beinex-bg"
+    />
+    <div class="cinematic-overlay"></div>
+    <div class="ambient-blue-ray"></div>
+  </div>
+
+  <!-- 3D Perspective Stage -->
+  <div class="perspective-stage">
+    <div
+      class="monolith-3d"
+      [style.transform]="'rotateX(' + rotX() + 'deg) rotateY(' + rotY() + 'deg)'"
+      id="beinex-3d-stage"
+    >
+      <!-- Central HD Beinex Presentation -->
+      <div class="beinex-centerpiece">
+        <div class="emblem-glow"></div>
+        <img
+          src="beinex-logo.jpg"
+          alt="Beinex.ai Official Logo"
+          class="beinex-hd-artwork"
+          id="beinex-hd-logo"
+        />
+      </div>
+
+      <!-- 3D Action Portal Button -->
+      <div class="action-portal-layer">
+        <button
+          type="button"
+          class="btn-enter-system"
+          (click)="enterDirectory()"
+          id="btn-launch-directory"
+          aria-label="Enter Employee Directory"
+        >
+          <span class="btn-text">Open Employee Directory</span>
+          <svg
+            class="btn-arrow"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M5 12h14"></path>
+            <path d="M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

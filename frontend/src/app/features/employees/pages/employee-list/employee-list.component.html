@@ -1,0 +1,382 @@
+<div class="ems-container">
+  <!-- Toast notification -->
+  <div *ngIf="toastMessage()" class="toast-notification" role="status">
+    <div class="toast-content">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>{{ toastMessage() }}</span>
+    </div>
+  </div>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-titles">
+        <div class="title-with-badge">
+          <h1>Employee Directory</h1>
+          <span class="count-pill">{{ pagination().total_records }} Total</span>
+        </div>
+        <p class="subtitle">
+          Manage enterprise employee records, departments, designations, and account statuses.
+        </p>
+      </div>
+      <button class="btn-primary" (click)="openAddModal()" id="btn-add-employee">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Add Employee</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Filter & Action Toolbar -->
+  <div class="toolbar-card">
+    <div class="toolbar-grid">
+      <!-- Search Input -->
+      <div class="search-field">
+        <svg
+          class="search-icon"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          id="search-input"
+          class="form-control search-input"
+          placeholder="Search by ID (e.g. #3 or 3), name, or email..."
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+          aria-label="Search employees by ID, name, or email"
+        />
+      </div>
+
+      <!-- Department Filter -->
+      <div class="filter-field">
+        <select
+          id="dept-filter"
+          class="form-control select-control"
+          [(ngModel)]="selectedDepartment"
+          (ngModelChange)="onFilterChange()"
+          aria-label="Filter by department"
+        >
+          <option value="">All Departments</option>
+          <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-field">
+        <select
+          id="status-filter"
+          class="form-control select-control"
+          [(ngModel)]="selectedStatus"
+          (ngModelChange)="onFilterChange()"
+          aria-label="Filter by status"
+        >
+          <option value="">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <!-- Clear Filters Button -->
+      <div class="action-field" *ngIf="hasActiveFilters()">
+        <button class="btn-clear" (click)="clearFilters()" id="btn-clear-filters">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span>Reset Filters</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="state-container loading-state">
+    <div class="spinner-primary"></div>
+    <p>Loading employee data from PostgreSQL...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading() && errorMessage()" class="state-container error-state">
+    <div class="error-state-icon">
+      <svg
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
+    <h3>Unable to Load Employees</h3>
+    <p>{{ errorMessage() }}</p>
+    <button class="btn-secondary" (click)="loadEmployees()">Try Again</button>
+  </div>
+
+  <!-- Table View -->
+  <div *ngIf="!isLoading() && !errorMessage()" class="table-card">
+    <!-- If records exist -->
+    <div *ngIf="employees().length > 0" class="table-responsive">
+      <table class="ems-table" id="employees-table">
+        <thead>
+          <tr>
+            <th class="col-id">ID</th>
+            <th class="col-name">Name</th>
+            <th class="col-email">Email</th>
+            <th class="col-dept">Department</th>
+            <th class="col-desig">Designation</th>
+            <th class="col-date">Joining Date</th>
+            <th class="col-status">Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let emp of employees()">
+            <td class="col-id text-muted font-mono">#{{ emp.id }}</td>
+            <td class="col-name font-semibold">{{ emp.name }}</td>
+            <td class="col-email">
+              <a [href]="'mailto:' + emp.email" class="email-link">{{ emp.email }}</a>
+            </td>
+            <td class="col-dept">
+              <span class="dept-tag">{{ emp.department }}</span>
+            </td>
+            <td class="col-desig">{{ emp.designation }}</td>
+            <td class="col-date text-muted">{{ emp.joining_date }}</td>
+            <td class="col-status">
+              <span
+                [class]="emp.status === 'Active' ? 'badge badge-active' : 'badge badge-inactive'"
+              >
+                {{ emp.status }}
+              </span>
+            </td>
+            <td class="col-actions">
+              <div class="action-buttons">
+                <button
+                  class="btn-action btn-action-edit"
+                  (click)="openEditModal(emp)"
+                  title="Edit employee details"
+                  [attr.aria-label]="'Edit ' + emp.name"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  <span>Edit</span>
+                </button>
+                <button
+                  class="btn-action btn-action-delete"
+                  (click)="openDeleteModal(emp)"
+                  title="Delete employee record"
+                  [attr.aria-label]="'Delete ' + emp.name"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    ></path>
+                  </svg>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State (No records at all in the system) -->
+    <div
+      *ngIf="employees().length === 0 && !hasActiveFilters()"
+      class="state-container empty-state"
+    >
+      <div class="empty-icon">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+      <h3>No Employees Found</h3>
+      <p>There are no employee records registered in the system yet.</p>
+      <button class="btn-primary" (click)="openAddModal()">
+        <span>Onboard First Employee</span>
+      </button>
+    </div>
+
+    <!-- No Results State (Filters returned 0 matches) -->
+    <div
+      *ngIf="employees().length === 0 && hasActiveFilters()"
+      class="state-container no-results-state"
+    >
+      <div class="empty-icon">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          <line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>
+      </div>
+      <h3>No Matching Results</h3>
+      <p>No employees matched your current search and filter criteria.</p>
+      <button class="btn-secondary" (click)="clearFilters()">
+        <span>Reset Filters</span>
+      </button>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div *ngIf="pagination().total_records > 0" class="pagination-footer">
+      <div class="pagination-meta">
+        Showing
+        <span class="font-semibold">{{
+          (pagination().current_page - 1) * pagination().limit + 1
+        }}</span>
+        to
+        <span class="font-semibold">{{
+          pagination().current_page * pagination().limit > pagination().total_records
+            ? pagination().total_records
+            : pagination().current_page * pagination().limit
+        }}</span>
+        of
+        <span class="font-semibold">{{ pagination().total_records }}</span>
+        records
+      </div>
+
+      <div class="pagination-controls">
+        <!-- Page size selector -->
+        <div class="page-size-selector">
+          <label for="page-size" class="text-muted">Per page:</label>
+          <select id="page-size" [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+            <option [value]="5">5</option>
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+          </select>
+        </div>
+
+        <!-- Prev Page Button -->
+        <button
+          class="btn-page"
+          [disabled]="pagination().current_page <= 1"
+          (click)="goToPage(pagination().current_page - 1)"
+          aria-label="Previous page"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <!-- Current Page / Total Pages Indicator -->
+        <span class="page-indicator">
+          Page {{ pagination().current_page }} of {{ pagination().total_pages || 1 }}
+        </span>
+
+        <!-- Next Page Button -->
+        <button
+          class="btn-page"
+          [disabled]="pagination().current_page >= pagination().total_pages"
+          (click)="goToPage(pagination().current_page + 1)"
+          aria-label="Next page"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Modal -->
+  <app-employee-form
+    *ngIf="isFormOpen"
+    [employeeToEdit]="employeeToEdit"
+    (formClosed)="closeFormModal()"
+    (formSaved)="onFormSaved($event)"
+  ></app-employee-form>
+
+  <!-- Delete Confirmation Modal -->
+  <app-delete-modal
+    *ngIf="employeeToDelete"
+    [employee]="employeeToDelete"
+    (cancelled)="closeDeleteModal()"
+    (confirmed)="onDeleteConfirmed($event)"
+  ></app-delete-modal>
+</div>

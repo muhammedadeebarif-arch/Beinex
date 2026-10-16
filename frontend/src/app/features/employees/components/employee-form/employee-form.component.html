@@ -1,0 +1,245 @@
+<div
+  class="modal-overlay"
+  (click)="onCancel()"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'form-title'"
+>
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div>
+        <h2 id="form-title" class="modal-title">
+          {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
+        </h2>
+        <p class="modal-subtitle">
+          {{
+            isEditMode
+              ? 'Update existing employee records and status.'
+              : 'Fill out the mandatory details below to onboard a new employee.'
+          }}
+        </p>
+      </div>
+      <button class="btn-close" (click)="onCancel()" aria-label="Close dialog">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Alert for general backend error -->
+    <div *ngIf="backendError" class="alert-error" role="alert">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>{{ backendError }}</span>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-body" novalidate>
+      <div class="form-grid">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="emp-name" class="form-label">Full Name <span class="required">*</span></label>
+          <input
+            id="emp-name"
+            type="text"
+            formControlName="name"
+            class="form-control"
+            [class.input-invalid]="
+              (form.get('name')?.touched && form.get('name')?.invalid) || fieldErrors['name']
+            "
+            placeholder="e.g. John Doe"
+            autocomplete="name"
+          />
+          <div
+            *ngIf="(form.get('name')?.touched && form.get('name')?.invalid) || fieldErrors['name']"
+            class="error-msg"
+          >
+            <span *ngIf="form.get('name')?.errors?.['required']">Full name is required.</span>
+            <span *ngIf="form.get('name')?.errors?.['maxlength']"
+              >Name cannot exceed 100 characters.</span
+            >
+            <span *ngIf="fieldErrors['name']">{{ fieldErrors['name'] }}</span>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="emp-email" class="form-label"
+            >Email Address <span class="required">*</span></label
+          >
+          <input
+            id="emp-email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            [class.input-invalid]="
+              (form.get('email')?.touched && form.get('email')?.invalid) || fieldErrors['email']
+            "
+            placeholder="e.g. john.doe@example.com"
+            autocomplete="email"
+          />
+          <div
+            *ngIf="
+              (form.get('email')?.touched && form.get('email')?.invalid) || fieldErrors['email']
+            "
+            class="error-msg"
+          >
+            <span *ngIf="form.get('email')?.errors?.['required']">Email address is required.</span>
+            <span
+              *ngIf="form.get('email')?.errors?.['email'] || form.get('email')?.errors?.['pattern']"
+              >Enter a valid email address.</span
+            >
+            <span *ngIf="form.get('email')?.errors?.['maxlength']"
+              >Email cannot exceed 150 characters.</span
+            >
+            <span *ngIf="fieldErrors['email']">{{ fieldErrors['email'] }}</span>
+          </div>
+        </div>
+
+        <!-- Department -->
+        <div class="form-group">
+          <label for="emp-dept" class="form-label"
+            >Department <span class="required">*</span></label
+          >
+          <select
+            id="emp-dept"
+            formControlName="department"
+            class="form-control select-control"
+            [class.input-invalid]="
+              (form.get('department')?.touched && form.get('department')?.invalid) ||
+              fieldErrors['department']
+            "
+          >
+            <option value="" disabled>Select department</option>
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+          <div
+            *ngIf="
+              (form.get('department')?.touched && form.get('department')?.invalid) ||
+              fieldErrors['department']
+            "
+            class="error-msg"
+          >
+            <span *ngIf="form.get('department')?.errors?.['required']"
+              >Department is required.</span
+            >
+            <span *ngIf="fieldErrors['department']">{{ fieldErrors['department'] }}</span>
+          </div>
+        </div>
+
+        <!-- Designation -->
+        <div class="form-group">
+          <label for="emp-desig" class="form-label"
+            >Job Designation <span class="required">*</span></label
+          >
+          <input
+            id="emp-desig"
+            type="text"
+            formControlName="designation"
+            class="form-control"
+            [class.input-invalid]="
+              (form.get('designation')?.touched && form.get('designation')?.invalid) ||
+              fieldErrors['designation']
+            "
+            placeholder="e.g. Senior Software Engineer"
+          />
+          <div
+            *ngIf="
+              (form.get('designation')?.touched && form.get('designation')?.invalid) ||
+              fieldErrors['designation']
+            "
+            class="error-msg"
+          >
+            <span *ngIf="form.get('designation')?.errors?.['required']"
+              >Designation is required.</span
+            >
+            <span *ngIf="form.get('designation')?.errors?.['maxlength']"
+              >Designation cannot exceed 100 characters.</span
+            >
+            <span *ngIf="fieldErrors['designation']">{{ fieldErrors['designation'] }}</span>
+          </div>
+        </div>
+
+        <!-- Joining Date -->
+        <div class="form-group">
+          <label for="emp-joining" class="form-label"
+            >Joining Date <span class="required">*</span></label
+          >
+          <input
+            id="emp-joining"
+            type="date"
+            formControlName="joining_date"
+            class="form-control"
+            [class.input-invalid]="
+              (form.get('joining_date')?.touched && form.get('joining_date')?.invalid) ||
+              fieldErrors['joining_date']
+            "
+          />
+          <div
+            *ngIf="
+              (form.get('joining_date')?.touched && form.get('joining_date')?.invalid) ||
+              fieldErrors['joining_date']
+            "
+            class="error-msg"
+          >
+            <span *ngIf="form.get('joining_date')?.errors?.['required']"
+              >Joining date is required.</span
+            >
+            <span *ngIf="fieldErrors['joining_date']">{{ fieldErrors['joining_date'] }}</span>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label for="emp-status" class="form-label"
+            >Employee Status <span class="required">*</span></label
+          >
+          <select
+            id="emp-status"
+            formControlName="status"
+            class="form-control select-control"
+            [class.input-invalid]="form.get('status')?.touched && form.get('status')?.invalid"
+          >
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+          <div *ngIf="form.get('status')?.touched && form.get('status')?.invalid" class="error-msg">
+            Status is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner"></span>
+          <span>{{
+            isSubmitting ? 'Saving...' : isEditMode ? 'Update Employee' : 'Add Employee'
+          }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

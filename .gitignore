@@ -1,0 +1,28 @@
+# OS & Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Environment
+.env
+*.env
+**/.env
+database/data/
+database/pg.log
+database/pgsql.zip
+database/pgsql/
+
+# Backend
+backend/.env
+backend/*.exe
+backend/bin/
+backend/coverage.out
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
