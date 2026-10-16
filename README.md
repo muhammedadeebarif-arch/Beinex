@@ -5,6 +5,72 @@
 
 A production-grade, enterprise Employee Management System built from scratch for the Beinex Consulting technical recruitment assessment.
 
+---
+
+## 📸 Application Walkthrough & Action Screenshots
+
+Every action and workflow specified in the technical requirements is demonstrated below with high-resolution screenshots from the live application:
+
+### 1. Full-Screen 3D Beinex Landing Interface (`/`)
+*Architectural light minimal aesthetic with spatial 3D perspective, official BEINEX.ai branding, interactive mouse tilt, and direct portal access.*
+![01 3D Beinex Landing Page](./docs/screenshots/01_beinex_3d_landing.png)
+
+---
+
+### 2. Employee Directory Dashboard (`/employees`)
+*Enterprise dashboard featuring live KPI counters (Total Records, Active, Inactive, Departments), global search, and real PostgreSQL-backed employee table.*
+![02 Employee Directory Dashboard](./docs/screenshots/02_employee_directory_dashboard.png)
+
+---
+
+### 3. Add Employee Modal
+*Modern reactive form modal for capturing employee records with structured inputs for Name, Email, Department, Designation, Joining Date, and Status.*
+![03 Add Employee Modal](./docs/screenshots/03_add_employee_modal.png)
+
+---
+
+### 4. Real-Time Client Form Validation
+*Instant validation feedback highlighting required fields, malformed email format detection, and submission protection.*
+![04 Form Validation Errors](./docs/screenshots/04_form_validation_errors.png)
+
+---
+
+### 5. HTTP 409 Duplicate Email Conflict Handling
+*Graceful error handling displaying clear alert banners when attempting to register an existing email address.*
+![05 Duplicate Email Conflict](./docs/screenshots/05_duplicate_email_conflict.png)
+
+---
+
+### 6. Successful Record Creation & Live Sync
+*Real-time synchronization adding the new employee to PostgreSQL and updating the live table with immediate user feedback.*
+![06 Employee Created Successfully](./docs/screenshots/06_employee_created_success.png)
+
+---
+
+### 7. Edit Employee Modal
+*Pre-populated editing dialog allowing rapid updates to employee roles, departments, and account statuses.*
+![07 Edit Employee Modal](./docs/screenshots/07_edit_employee_modal.png)
+
+---
+
+### 8. Instant Search & Multi-Column Filtering
+*High-performance client-side filtering combining live search by keyword with department and employment status filters.*
+![08 Search & Filtering](./docs/screenshots/08_search_and_filter.png)
+
+---
+
+### 9. Delete Confirmation Safety Modal
+*Destructive action safeguard prompting the user for confirmation before removing an employee record from the database.*
+![09 Delete Confirmation Dialog](./docs/screenshots/09_delete_confirmation_modal.png)
+
+---
+
+### 10. Empty State & Filter Reset
+*Clear, user-friendly empty state screen displayed when search or filter combinations yield zero records.*
+![10 Empty State Handling](./docs/screenshots/10_empty_state_handling.png)
+
+---
+
 ## Mandatory Technology Stack
 
 - **Frontend:** Angular 19+ (Standalone Components, TypeScript, Reactive Forms, Signals, Modern Responsive CSS)
